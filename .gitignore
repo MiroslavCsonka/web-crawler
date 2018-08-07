@@ -109,3 +109,9 @@ fabric.properties
 
 # Editor-based Rest Client
 .idea/httpRequests
+
+# Used as a temporary cache for PStore
+tmp
+
+# Auto generated diagram from web crawling
+diagram.dot

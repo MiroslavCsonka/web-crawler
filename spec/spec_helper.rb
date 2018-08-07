@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+project_root = File.expand_path('../', __dir__)
+$LOAD_PATH.unshift(project_root) unless $LOAD_PATH.include?(project_root)
+
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest

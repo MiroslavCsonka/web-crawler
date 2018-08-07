@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+project_root = File.expand_path('../', __dir__)
+$LOAD_PATH.unshift(project_root) unless $LOAD_PATH.include?(project_root)
+
+require 'lib/command_line_config_parser'
+require 'lib/web_crawler'
+require 'lib/table_summary'
+require 'lib/relationship_generator'
+
+require 'pstore'
+require 'terminal-table'
+require 'logger'
+require 'set'
+
+begin
+  config = CommandLineConfigParser.new(ARGV).parse
+rescue CommandLineConfigParser::Error => e
+  puts e.to_s
+  exit(1)
+end
+
+logger = Logger.new(STDOUT)
+logger.level = Logger::DEBUG
+
+starting_point = config.fetch(:url)
+
+pstore = PStore.new('tmp/data.pstore', thread_safe: true)
+visited_pages = WebCrawler.new(starting_point, pstore: pstore).run
+
+puts TableSummary.new(visited_pages).print
+diagram = RelationshipGenerator.new(visited_pages).generate
+File.write('diagram.dot', diagram)
